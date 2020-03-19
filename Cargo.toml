@@ -1,0 +1,54 @@
+[package]
+name = "rmq"
+version = "0.1.0"
+authors = ["Rolf Timmermans <rolftimmermans@voormedia.com>"]
+edition = "2018"
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+
+[profile.bench]
+lto = "fat"
+codegen-units = 1
+
+[features]
+default = ["tcp", "udp", "inproc"]
+
+tcp = ["tokio/tcp"]
+udp = ["tokio/udp", "tokio-util/udp"]
+ipc = ["tokio/uds"]
+inproc = []
+
+debug = ["tracing"]
+
+[dependencies]
+futures = {version = "*", default-features = false, features = ["std"]}
+lazy_static = {version = "*", default-features = false}
+bytes = {version = "*", default-features = false}
+parking_lot = {version = "*", default-features = false}
+rand = {version = "*", default-features = false}
+smallvec = {version = "*", default-features = false} #, features = ["union"]}
+tokio = {version = "*", default-features = false, features = ["stream", "sync", "dns"]}
+tokio-util = {version = "*", default-features = false, features = ["codec"]}
+tracing = {version = "*", default-features = false, optional = true}
+
+[dev-dependencies]
+libzmq = "*"
+loom = "0.2.15"
+claim = "*"
+tokio = {version = "*", features = ["macros", "time", "stream", "rt-threaded", "sync", "dns"]}
+tempfile = "*"
+criterion = "*"
+futures-test = "*"
+tracing = {version = "*", features = ["attributes"]}
+tracing-futures = "*"
+tracing-subscriber = "*"
+
+[[bench]]
+name = "decode"
+harness = false
+
+[[bench]]
+name = "tcp"
+harness = false
